@@ -91,7 +91,8 @@ function selfTest() {
     play1.makeMove(0,2);
     //play2.makeMove(0,3); //out of bounds!
     //play1.makeMove(); // no args passed
-    play2.makeMove(1,1); // overwrite last move?
+    //play2.makeMove(0,) // 1 arg passed
+    play1.makeMove(1,1); // overwrite last move?
 }
 
 //selfTest();
