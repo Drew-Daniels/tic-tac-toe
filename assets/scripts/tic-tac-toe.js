@@ -15,6 +15,16 @@ function buildTable(arr) {
             rowDiv.appendChild(colDiv);
         };
     };
+    let tileNodes = document.getElementsByClassName('tile');
+    let tiles = [...tileNodes];
+    tiles.forEach((tile) => {
+        tile.addEventListener('click', function () {
+            let tileID = tile.getAttribute('id');
+            let row = tileID.slice(1,2);
+            let col = tileID.slice(3,4);
+            // play1.makeMove(row, col);
+        })
+    })
 };
 
 let gameArray = [
@@ -42,13 +52,34 @@ const Player = (symbol) => {
 
 const gameBoard = (() => {
     let symbol;
+    let whoseTurn;
+
     const thisTile = function (ri, ci) {
         let tile = document.getElementById('r' + ri + 'c' + ci);
-        return document.getElementById('r' + ri + 'c' + ci);
+        return tile;
     }
+
+    function _isTurn(sym) {
+        let ans = (whoseTurn === sym) ? true: false;
+        return ans;
+    }
+
+    function _checkForTurnsSet(sym) {
+        if ((!!!whoseTurn)) {
+            whoseTurn = sym;
+        }
+    }
+
+    function _switchTurns() {
+        if (whoseTurn === 'X') {
+            whoseTurn = 'O'
+        } else {
+            whoseTurn = 'X'
+        }
+    }
+
     function _isInRange(ri, ci) {
         let max_range = gameArray.length-1;
-        console.log(max_range);
         let upper_bound_compliant = (ri <= max_range && ci <= max_range) ? true: false;
         let lower_bound_compliant = (ri >= 0 && ci >= 0) ? true: false;
         let ans = (upper_bound_compliant && lower_bound_compliant) ? true: false;
@@ -62,9 +93,11 @@ const gameBoard = (() => {
 
     function _updateBoard(sym, ri, ci) {
         symbol = sym;
-        if (_isEmptyTile(ri, ci) && _isInRange(ri, ci)) {
+        _checkForTurnsSet(symbol);
+        if (_isEmptyTile(ri, ci) && _isInRange(ri, ci) && _isTurn(sym)) {
             _updateArr(ri, ci);
             _drawMove(ri, ci);
+            _switchTurns();
         }
     }
 
@@ -92,7 +125,7 @@ function selfTest() {
     //play2.makeMove(0,3); //out of bounds!
     //play1.makeMove(); // no args passed
     //play2.makeMove(0,) // 1 arg passed
-    play1.makeMove(1,1); // overwrite last move?
+    play2.makeMove(1,2); // overwrite last move?
 }
 
 selfTest();
