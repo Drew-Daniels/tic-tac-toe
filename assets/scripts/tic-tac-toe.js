@@ -13,13 +13,10 @@ function buildTable() {
                                 'c' + String(ci));
             colDiv.innerHTML = '';
             rowDiv.appendChild(colDiv);
-        }
-    }
-}
+        };
+    };
+};
+
+let gameArray = [];
 
 buildTable();
-
-function addListeners() {
-    let tiles = document.querySelectorAll('.tile');
-    
-}
