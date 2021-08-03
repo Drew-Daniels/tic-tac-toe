@@ -46,3 +46,19 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.gameTable {
+    display: flex;
+
+    border: 1 solid black;
+    background-color: gray;
+}
+
+.rowDiv {
+
+}
+
+.colDiv {
+
+}
+
