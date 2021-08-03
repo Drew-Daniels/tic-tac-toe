@@ -73,7 +73,7 @@ const gameBoard = (() => {
     }
 
     function _drawMove(ri, ci) {
-        thisTile(ri, ci).innerHTML = symbol;
+        thisTile(ri, ci).innerText = symbol;
     }
 
     const playerMove = (playerSymbol, ri, ci) => _updateBoard(playerSymbol, ri, ci);
@@ -95,4 +95,4 @@ function selfTest() {
     play1.makeMove(1,1); // overwrite last move?
 }
 
-//selfTest();
+selfTest();
