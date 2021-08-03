@@ -46,19 +46,33 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+/* CSS RESET */
+/*=============================================
+/* CUSTOM */
+header {
+    
+}
 
-.gameTable {
+#gameTable {
     display: flex;
-
+    flex-direction: column;
     border: 1 solid black;
-    background-color: gray;
+    width: 100%;
 }
 
 .rowDiv {
-
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
-.colDiv {
-
+.tile {
+    background-color: lightgrey;
+    width: 50px;
+    height: 50px;
+    margin: 10px;
+    padding: 10px;
+    border: 1px solid black;
 }
 

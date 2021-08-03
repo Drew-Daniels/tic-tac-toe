@@ -7,12 +7,19 @@ function buildTable() {
         table.appendChild(rowDiv);
         for (ci=1; ci < 4;ci++) {
             let colDiv = document.createElement('div');
-            colDiv.setAttribute('class', 'colDiv');
-            colDiv.setAttribute('id', 'col-' + String(ci));
-            colDiv.innerHTML = 'test';
+            colDiv.setAttribute('class', 'tile');
+            colDiv.setAttribute('id', 'tile-' + 
+                                'r' + String(ri) + 
+                                'c' + String(ci));
+            colDiv.innerHTML = '';
             rowDiv.appendChild(colDiv);
         }
     }
 }
 
 buildTable();
+
+function addListeners() {
+    let tiles = document.querySelectorAll('.tile');
+    
+}
