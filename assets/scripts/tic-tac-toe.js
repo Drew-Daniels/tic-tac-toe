@@ -37,20 +37,7 @@ function createTile(parent, ri, ci, arr) {
     return colDiv;
 }
 
-let gameArray = [
-    [
-        [''], [''], ['']
-    ],
-    [
-        [''], [''], [''] 
-    ],
-    [
-        [''], [''], [''] 
-    ] 
-];
-
-buildTable(gameArray);
-
+//========================== FACTORY FUNCTIONS & MODULES ===========================
 const Player = (symbol) => {
 
     const getSymbol = () => symbol;
@@ -114,6 +101,13 @@ const gameBoard = (() => {
 
     function _updateArr(ri, ci) {
         gameArray[ri][ci][0] = symbol;
+    }
+
+    function _gameOverPopup() {
+        // message saying who won
+    }
+    function _isATie() {
+        //check if all tiles are not empty strings
     }
 
     function _isAWin() {
@@ -188,6 +182,7 @@ const gameBoard = (() => {
     }
 })();
 
+//================================ SELF-TEST CODE ===============================
 function selfTest() {
     let play1 = Player('X');
     let play2 = Player('O');
@@ -201,4 +196,22 @@ function selfTest() {
     //play2.makeMove(1,2); // overwrite last move?
 }
 
-selfTest();
+//selfTest();
+
+function startGame() {
+
+    let gameArray = [
+        [
+            [''], [''], ['']
+        ],
+        [
+            [''], [''], [''] 
+        ],
+        [
+            [''], [''], [''] 
+        ] 
+    ];
+
+    buildTable(gameArray);
+    document.querySelector('#interfaceContainer').removeChild('#startGameBtn');
+}

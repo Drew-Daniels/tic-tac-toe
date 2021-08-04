@@ -50,6 +50,23 @@ table {
 /*=============================================
 /* CUSTOM */
 header {
+    text-align: center;
+}
+
+footer {
+    text-align: center;
+}
+#playerText {
+    text-align: center;
+}
+
+#interfaceContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+button {
 
 }
 
