@@ -198,6 +198,7 @@ function selfTest() {
 
 //selfTest();
 
+//============================== INITIALIZATION CODE ===============================
 function startGame() {
 
     let gameArray = [
@@ -215,3 +216,5 @@ function startGame() {
     buildTable(gameArray);
     document.querySelector('#interfaceContainer').removeChild('#startGameBtn');
 }
+
+document.querySelectorAll('#choiceBtn')

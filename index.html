@@ -5,6 +5,9 @@
     <title>Tic-Tac-Toe</title>
     <link rel="icon" type="image/png" href="/tic-tac-toe.png">
     <link rel="stylesheet" href="assets/stylesheets/style.css"
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani&display=swap" rel="stylesheet"> 
 </head>
 <header>
     Tic-Tac-Toe
@@ -13,9 +16,9 @@
     <script src="assets/scripts/tic-tac-toe.js" defer></script>
     <div id="gameTable"></div>
     <div id="playerText">SELECT YOUR PLAYER
-        <div id="interfaceContainer">
-            <button id="X">X</button>
-            <button id="O">O</button>
+        <div class="choiceBtnContainer">
+            <button id="player2Human" class="choiceBtn">Human</button>
+            <button id="player2AI" class="choiceBtn">AI</button>
         </div>
     </div>
 </body>
