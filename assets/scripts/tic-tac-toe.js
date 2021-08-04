@@ -149,8 +149,30 @@ const gameBoard = (() => {
             //gameArray[0][0] === gameArray[1][1] === gameArray[2][2]
             //vice versa
             //gameArray[0][2] === gameArray[1][1] === gameArray[2][0]
+            // Test 1 - Top Left to Bottom Right
+            if (
+                (gameArray[0][0][0] ===
+                 gameArray[1][1][0]) &&
+                 (gameArray[1][1][0] ===
+                 gameArray[2][2][0]) &&
+                 (gameArray[0][0][0] !== '')
+            ) {
+                return true;
+            }
+            // Test 2 - Top Right to Bottom Left
+            else if (
+                (gameArray[0][2][0] ===
+                 gameArray[1][1][0]) &&
+                (gameArray[1][1][0] ===
+                 gameArray[2][0][0]) &&
+
+                (gameArray[0][2][0] !== '')
+            ) {
+                return true;
+            }
+            else return false;
         }
-        let res = (checkRows() || checkCols()) ? true: false;
+        let res = (checkRows() || checkCols() || checkDiags()) ? true: false;
         return res;
     }
 
