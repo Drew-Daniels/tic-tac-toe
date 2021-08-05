@@ -1,92 +1,3 @@
-let gameArray = [
-    [
-        [''], [''], ['']
-    ],
-    [
-        [''], [''], [''] 
-    ],
-    [
-        [''], [''], [''] 
-    ] 
-];
-
-function buildTable(arr) {
-    let table = document.getElementById('gameTable');
-    for (ri=0; ri < arr.length;ri++) {
-        let rowDiv = createRow(table, ri);
-        for (ci=0; ci < arr.length;ci++) {
-            createTile(rowDiv, ri, ci, arr);
-        };
-    };
-    let tileNodes = document.getElementsByClassName('tile');
-    let tiles = [...tileNodes];
-    let row, oldAttr;
-    tiles.forEach((tile) => {
-        row = parseInt(tile.getAttribute('id').slice(1,2));
-        col = parseInt(tile.getAttribute('id').slice(3,4));
-        // set row borders
-        switch (true) {
-            case (row === 0): {
-                addToAttr(tile, 'class', 'tile-top')
-                break;
-            }
-            case (row === 1): {
-                addToAttr(tile, 'class', 'tile-top tile-bottom')
-                break;
-            }
-            case (row === 2): {
-                addToAttr(tile, 'class', 'tile-bottom')
-                break;
-            }
-        }
-        // set col borders
-        switch (true) {
-            case (col === 0): {
-                addToAttr(tile, 'class', 'tile-left')
-                break;
-            }
-            case (col === 1): {
-                addToAttr(tile, 'class', 'tile-left tile-right')
-                break;
-            }
-            case (col === 2): {
-                addToAttr(tile, 'class', 'tile-right')
-                break;
-            }
-        }
-        tile.addEventListener('click', function () {
-            let tileID = tile.getAttribute('id');
-            let row = tileID.slice(1,2);
-            let col = tileID.slice(3,4);
-            gameBoard.playerMove(gameBoard.getTurn(), row, col);
-        })
-    })
-};
-
-function addToAttr(ele, attr, strToAdd) {
-    let oldAttr = ele.getAttribute(attr);
-    ele.setAttribute(attr, oldAttr + ' ' + strToAdd);
-}
-
-function createRow(parent, ri) {
-    let rowDiv = document.createElement('div');
-    rowDiv.setAttribute('class', 'rowDiv');
-    rowDiv.setAttribute('id', 'r' + String(ri));
-    parent.appendChild(rowDiv);
-    return rowDiv;
-}
-
-function createTile(parent, ri, ci, arr) {
-    let colDiv = document.createElement('div');
-    colDiv.setAttribute('class', 'tile');
-    colDiv.setAttribute('id', 
-                        'r' + String(ri) + 
-                        'c' + String(ci));
-    colDiv.innerHTML = arr[ri][ci];
-    parent.appendChild(colDiv);
-    return colDiv;
-}
-
 //========================== FACTORY FUNCTIONS & MODULES ===========================
 const Player = (symbol) => {
 
@@ -98,6 +9,96 @@ const Player = (symbol) => {
 }
 
 const gameBoard = (() => {
+    let gameArray = [
+        [
+            [''], [''], ['']
+        ],
+        [
+            [''], [''], [''] 
+        ],
+        [
+            [''], [''], [''] 
+        ] 
+    ];
+    
+    function buildTable() {
+        let arr = gameArray;
+        let table = document.getElementById('gameTable');
+        for (ri=0; ri < arr.length;ri++) {
+            let rowDiv = createRow(table, ri);
+            for (ci=0; ci < arr.length;ci++) {
+                createTile(rowDiv, ri, ci, arr);
+            };
+        };
+        let tileNodes = document.getElementsByClassName('tile');
+        let tiles = [...tileNodes];
+        let row;
+        tiles.forEach((tile) => {
+            row = parseInt(tile.getAttribute('id').slice(1,2));
+            col = parseInt(tile.getAttribute('id').slice(3,4));
+            // set row borders
+            switch (true) {
+                case (row === 0): {
+                    addToAttr(tile, 'class', 'tile-top')
+                    break;
+                }
+                case (row === 1): {
+                    addToAttr(tile, 'class', 'tile-top tile-bottom')
+                    break;
+                }
+                case (row === 2): {
+                    addToAttr(tile, 'class', 'tile-bottom')
+                    break;
+                }
+            }
+            // set col borders
+            switch (true) {
+                case (col === 0): {
+                    addToAttr(tile, 'class', 'tile-left')
+                    break;
+                }
+                case (col === 1): {
+                    addToAttr(tile, 'class', 'tile-left tile-right')
+                    break;
+                }
+                case (col === 2): {
+                    addToAttr(tile, 'class', 'tile-right')
+                    break;
+                }
+            }
+            tile.addEventListener('click', function () {
+                let tileID = tile.getAttribute('id');
+                let row = tileID.slice(1,2);
+                let col = tileID.slice(3,4);
+                gameBoard.playerMove(gameBoard.getTurn(), row, col);
+            })
+        })
+    };
+    
+    function addToAttr(ele, attr, strToAdd) {
+        let oldAttr = ele.getAttribute(attr);
+        ele.setAttribute(attr, oldAttr + ' ' + strToAdd);
+    }
+    
+    function createRow(parent, ri) {
+        let rowDiv = document.createElement('div');
+        rowDiv.setAttribute('class', 'rowDiv');
+        rowDiv.setAttribute('id', 'r' + String(ri));
+        parent.appendChild(rowDiv);
+        return rowDiv;
+    }
+    
+    function createTile(parent, ri, ci, arr) {
+        let colDiv = document.createElement('div');
+        colDiv.setAttribute('class', 'tile');
+        colDiv.setAttribute('id', 
+                            'r' + String(ri) + 
+                            'c' + String(ci));
+        colDiv.innerHTML = arr[ri][ci];
+        parent.appendChild(colDiv);
+        return colDiv;
+    }
+
     let symbol;
     let whoseTurn;
 
@@ -228,13 +229,14 @@ const gameBoard = (() => {
     const getTurn = () => whoseTurn;
     return {
         playerMove,
-        getTurn
+        getTurn,
+        buildTable,
     }
 })();
 
 //================================ SELF-TEST CODE ===============================
 function selfTest() {
-    buildTable(gameArray);
+    gameBoard.buildTable();
 
     let play1 = Player('X');
     let play2 = Player('O');
@@ -257,7 +259,7 @@ function startGame() {
     // check if player2 symbol selected
     // if either are not true, wait to build the table
     // initialize both players
-    buildTable(gameArray);
+    gameBoard.buildTable();
 }
 
 //startGame();
