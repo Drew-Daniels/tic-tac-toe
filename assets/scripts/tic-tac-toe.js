@@ -8,7 +8,40 @@ function buildTable(arr) {
     };
     let tileNodes = document.getElementsByClassName('tile');
     let tiles = [...tileNodes];
+    let row, oldAttr;
     tiles.forEach((tile) => {
+        row = parseInt(tile.getAttribute('id').slice(1,2));
+        col = parseInt(tile.getAttribute('id').slice(3,4));
+        // set row borders
+        switch (true) {
+            case (row === 0): {
+                addToAttr(tile, 'class', 'tile-top')
+                break;
+            }
+            case (row === 1): {
+                addToAttr(tile, 'class', 'tile-top tile-bottom')
+                break;
+            }
+            case (row === 2): {
+                addToAttr(tile, 'class', 'tile-bottom')
+                break;
+            }
+        }
+        // set col borders
+        switch (true) {
+            case (col === 0): {
+                addToAttr(tile, 'class', 'tile-left')
+                break;
+            }
+            case (col === 1): {
+                addToAttr(tile, 'class', 'tile-left tile-right')
+                break;
+            }
+            case (col === 2): {
+                addToAttr(tile, 'class', 'tile-right')
+                break;
+            }
+        }
         tile.addEventListener('click', function () {
             let tileID = tile.getAttribute('id');
             let row = tileID.slice(1,2);
@@ -17,6 +50,11 @@ function buildTable(arr) {
         })
     })
 };
+
+function addToAttr(ele, attr, strToAdd) {
+    let oldAttr = ele.getAttribute(attr);
+    ele.setAttribute(attr, oldAttr + ' ' + strToAdd);
+}
 
 function createRow(parent, ri) {
     let rowDiv = document.createElement('div');
@@ -214,7 +252,6 @@ function startGame() {
     ];
 
     buildTable(gameArray);
-    document.querySelector('#interfaceContainer').removeChild('#startGameBtn');
 }
 
-document.querySelectorAll('#choiceBtn')
+startGame();
