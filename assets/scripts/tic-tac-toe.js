@@ -1,3 +1,15 @@
+let gameArray = [
+    [
+        [''], [''], ['']
+    ],
+    [
+        [''], [''], [''] 
+    ],
+    [
+        [''], [''], [''] 
+    ] 
+];
+
 function buildTable(arr) {
     let table = document.getElementById('gameTable');
     for (ri=0; ri < arr.length;ri++) {
@@ -222,6 +234,8 @@ const gameBoard = (() => {
 
 //================================ SELF-TEST CODE ===============================
 function selfTest() {
+    buildTable(gameArray);
+
     let play1 = Player('X');
     let play2 = Player('O');
 
@@ -234,24 +248,16 @@ function selfTest() {
     //play2.makeMove(1,2); // overwrite last move?
 }
 
-//selfTest();
+selfTest();
 
 //============================== INITIALIZATION CODE ===============================
 function startGame() {
 
-    let gameArray = [
-        [
-            [''], [''], ['']
-        ],
-        [
-            [''], [''], [''] 
-        ],
-        [
-            [''], [''], [''] 
-        ] 
-    ];
-
+    // check if player2 type selected
+    // check if player2 symbol selected
+    // if either are not true, wait to build the table
+    // initialize both players
     buildTable(gameArray);
 }
 
-startGame();
+//startGame();
