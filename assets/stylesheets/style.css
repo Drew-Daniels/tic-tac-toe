@@ -152,3 +152,12 @@ footer {
 .playerScoreText {
     margin: 15px;
 }
+
+#githubIcon {
+    width: 20px;
+    height: auto;
+}
+
+#githubProfileLink {
+    margin: 15px;
+}
