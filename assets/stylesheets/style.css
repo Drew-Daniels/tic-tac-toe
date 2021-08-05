@@ -138,3 +138,17 @@ footer {
     border-top: 1px solid black;
 }
 
+#scoreboard {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+#restartBtn {
+    margin: 15px;
+    margin-top: auto;
+}
+
+.playerScoreText {
+    margin: 15px;
+}
