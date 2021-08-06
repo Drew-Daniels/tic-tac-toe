@@ -1,14 +1,17 @@
 //========================== FACTORY FUNCTIONS & MODULES ===========================
-const Player = (symbol) => {
+const Player = (name, symbol, type) => {
 
+    const getName = () => name;
     const getSymbol = () => symbol;
+    const getType = () => type;
     const makeMove = (ri, ci) => {
         gameBoard.playerMove(symbol, ri, ci);
     }
-    return {getSymbol, makeMove};
+    return {getName, getSymbol, getType, makeMove};
 }
 
 const gameBoard = (() => {
+    let p1, p2;
     let gameArray = [
         [
             [''], [''], ['']
@@ -107,6 +110,10 @@ const gameBoard = (() => {
         return tile;
     }
 
+    function startGame(player1, player2) {
+        [p1, p2] = [player1, player2];
+    }
+
     function _isTurn(sym) {
         let ans = (whoseTurn === sym) ? true: false;
         return ans;
@@ -141,12 +148,24 @@ const gameBoard = (() => {
 
     function _updateBoard(sym, ri, ci) {
         symbol = sym;
+        let winnerSym;
+        let res;
         _checkForTurnsSet(symbol);
         if (_isEmptyTile(ri, ci) && _isInRange(ri, ci) && _isTurn(sym)) {
             _updateArr(ri, ci);
             _drawMove(ri, ci);
             _switchTurns();
-            console.log(_isAWin());
+            res = _isAWin();
+            if(res[0]) {
+                winnerSym = res[1];
+                p1Sym = p1.getSymbol();
+                p2Sym = p2.getSymbol();
+                if (p1Sym === winnerSym) {
+                    console.log(p1.getName() + ' is the winner ');
+                } else if (p2Sym === winnerSym) {
+                    console.log(p2.getName() + ' is the winner ');
+                }
+            }
         }
     }
 
@@ -162,6 +181,7 @@ const gameBoard = (() => {
     }
 
     function _isAWin() {
+        let winSym;
         function checkRows() {
             for (let ri = 0; ri < gameArray.length; ri++) {
                 if (
@@ -172,8 +192,9 @@ const gameBoard = (() => {
 
                     (gameArray[ri][0][0] !== '')
                     ) {
-                        return true
-                } else false;
+                        winSym = gameArray[ri][0][0];
+                        return [true, winSym]
+                } else return false;
             }
         }
         function checkCols() {
@@ -186,15 +207,12 @@ const gameBoard = (() => {
                     
                     (gameArray[0][ci][0] !== '')
                     ) {
-                        return true
+                        winSym = gameArray[0][ci][0];
+                        return [true, winSym]
                 } else return false;
             }
         }
         function checkDiags() {
-            //gameArray[0][0] === gameArray[1][1] === gameArray[2][2]
-            //vice versa
-            //gameArray[0][2] === gameArray[1][1] === gameArray[2][0]
-            // Test 1 - Top Left to Bottom Right
             if (
                 (gameArray[0][0][0] ===
                  gameArray[1][1][0]) &&
@@ -202,7 +220,8 @@ const gameBoard = (() => {
                  gameArray[2][2][0]) &&
                  (gameArray[0][0][0] !== '')
             ) {
-                return true;
+                winSym = gameArray[0][0][0];
+                return [true, winSym];
             }
             // Test 2 - Top Right to Bottom Left
             else if (
@@ -213,12 +232,13 @@ const gameBoard = (() => {
 
                 (gameArray[0][2][0] !== '')
             ) {
-                return true;
+                winSym = gameArray[0][2][0];
+                return [true, winSym];
             }
             else return false;
         }
         let res = (checkRows() || checkCols() || checkDiags()) ? true: false;
-        return res;
+        return [res, winSym];
     }
 
     function _drawMove(ri, ci) {
@@ -231,15 +251,19 @@ const gameBoard = (() => {
         playerMove,
         getTurn,
         buildTable,
+        startGame,
     }
 })();
 
 //================================ SELF-TEST CODE ===============================
 function selfTest() {
     gameBoard.buildTable();
+    
 
-    let play1 = Player('X');
-    let play2 = Player('O');
+    let play1 = Player('Player 1','X', 'human');
+    let play2 = Player('Player 2','O', 'ai');
+
+    gameBoard.startGame(play1, play2);
 
     play1.makeMove(1,1);
     play2.makeMove(0,0);
@@ -253,14 +277,7 @@ function selfTest() {
 selfTest();
 
 //============================== INITIALIZATION CODE ===============================
-function startGame() {
 
-    // check if player2 type selected
-    // check if player2 symbol selected
-    // if either are not true, wait to build the table
-    // initialize both players
-    gameBoard.buildTable();
-}
 
 //startGame();
 
