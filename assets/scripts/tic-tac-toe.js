@@ -67,12 +67,9 @@ const gameBoard = (() => {
         // REFERENCES
         let player2TypeHuman = document.querySelector("#player2Human");
         let player2TypeAI = document.querySelector("#player2AI")
-        let player1SymX = document.querySelector('#player1X');
-        let player1SymO = document.querySelector('#player1O');
         let restartBtn = document.querySelector('#restartBtn');
         // DEFAULTS
         activateColor(player2TypeAI, player2TypeHuman);
-        activateColor(player1SymX, player1SymO);
 
         // LISTENERS
         // Set up player 2 type (Human or AI)
@@ -83,17 +80,6 @@ const gameBoard = (() => {
         player2TypeAI.addEventListener('click', function() {
             p2.switchType();
             activateColor(player2TypeAI, player2TypeHuman)
-        })
-        // Set up player 1 symbol ('X' or 'O')
-        player1SymX.addEventListener('click', function() {
-            p1.switchSymbol();
-            p2.switchSymbol();
-            activateColor(player1SymX, player1SymO);
-        })
-        player1SymO.addEventListener('click', function() {
-            p1.switchSymbol();
-            p2.switchSymbol();
-            activateColor(player1SymO, player1SymX);
         })
         restartBtn.addEventListener('click', restartMatch)
     }
@@ -219,12 +205,12 @@ const gameBoard = (() => {
 
     function _aiMakeMove(symToCheck) {
         if (p2.getSymbol() === symToCheck && p2.getType() === 'ai') {
-            setTimeout(function() {
-                let move = p2.calcMoveRandom();
+            let move = p2.calcMoveRandom();
+            if (!!move) {
                 let moveRow = parseInt(move.slice(1,2));
                 let moveCol = parseInt(move.slice(3,4));
                 p2.makeMove(moveRow, moveCol);
-            }, delayMS)
+            }
         }
     }
 
@@ -260,36 +246,32 @@ const gameBoard = (() => {
         if (_isEmptyTile(ri, ci) && _isInRange(ri, ci) && _isTurn(sym)) {
             _updateArr(ri, ci);
             _drawMove(ri, ci);
+            _switchTurns();
             //add wait
-            setTimeout(function() {
-                _switchTurns();
-                winCheck = _isAWin();
-                tieCheck = _isATie();
-                if (winCheck[0]) {
-                    setTimeout(function () {
-                        res = winCheck;
-                        winnerSym = res[2];
-                        p1Sym = p1.getSymbol();
-                        p2Sym = p2.getSymbol();
-                        if (p1Sym === winnerSym) {
-                            p1.incrScore();
-                            _updateDisplayMsg(_winMsg(p1.getName(), 
-                                              String(++gameNumber)));
-                        } else if (p2Sym === winnerSym) {
-                            p2.incrScore();
-                            _updateDisplayMsg(_winMsg(p2.getName(), 
-                                              String(++gameNumber)));
-                        }
-                        _updateScoreBoard();
-                        _clearBoard();
-                    }, delayMS);
-                } else if (tieCheck[0]) {
-                    setTimeout(function() {
-                        _updateDisplayMsg(_tieMsg(String(++gameNumber)));
-                        _clearBoard();
-                    }, delayMS)
+            winCheck = _isAWin();
+            tieCheck = _isATie();
+            if (winCheck[0]) {
+                // delay clearing the board after win
+                res = winCheck;
+                winnerSym = res[2];
+                p1Sym = p1.getSymbol();
+                p2Sym = p2.getSymbol();
+                if (p1Sym === winnerSym) {
+                    p1.incrScore();
+                    _updateDisplayMsg(_winMsg(p1.getName(), 
+                                        String(++gameNumber)));
+                } else if (p2Sym === winnerSym) {
+                    p2.incrScore();
+                    _updateDisplayMsg(_winMsg(p2.getName(), 
+                                        String(++gameNumber)));
                 }
-            }, delayMS);
+                _updateScoreBoard();
+                _clearBoard();
+            // delay clearing the board after a tie
+            } else if (tieCheck[0]) {
+                _updateDisplayMsg(_tieMsg(String(++gameNumber)));
+                _clearBoard();
+            }
         }
     }
 
