@@ -1,3 +1,5 @@
+//========================= GLOBALS =========================================
+
 //========================== FACTORY FUNCTIONS & MODULES ===========================
 const Player = (name, symbol, type) => {
 
@@ -12,6 +14,48 @@ const Player = (name, symbol, type) => {
 
 const gameBoard = (() => {
     let p1, p2;
+    let p2TypeChoice, p1SymChoice;
+    const RED_RGB = 'rgb(0, 255, 0)';
+    const GRAY_RGB = 'rgb(240, 240, 240)';
+    function sideBarSetup() {
+        // Set up player 2 type (Human or AI)
+
+        function activateColor(ele1, ele2, colOn=RED_RGB, colOff=GRAY_RGB) {
+            ele1.style.backgroundColor = colOn;
+            ele2.style.backgroundColor = colOff;
+        }
+
+        let player2TypeHuman = document.querySelector("#player2Human");
+        let player2TypeAI = document.querySelector("#player2AI")
+        player2TypeHuman.addEventListener('click', function() {
+            p2TypeChoice = 'human';
+            activateColor(player2TypeHuman, player2TypeAI)
+        })
+        player2TypeAI.addEventListener('click', function() {
+            p2TypeChoice = 'ai';
+            activateColor(player2TypeAI, player2TypeHuman)
+        })
+        // Set up player 1 symbol ('X' or 'O')
+        let player1SymX = document.querySelector('#player1X');
+        let player1SymO = document.querySelector('#player1O');
+        player1SymX.addEventListener('click', function() {
+            p1SymChoice = 'X';
+            activateColor(player1SymX, player1SymO);
+        })
+        player1SymO.addEventListener('click', function() {
+            p1SymChoice = 'O';
+            activateColor(player1SymO, player1SymX);
+        })
+    }
+
+    function getP1Sym() {
+        return p1SymChoice;
+    }
+
+    function getP2Type() {
+        return p2TypeChoice;
+    }
+
     let gameArray = [
         [
             [''], [''], ['']
@@ -250,7 +294,10 @@ const gameBoard = (() => {
     return {
         playerMove,
         getTurn,
+        sideBarSetup,
         buildTable,
+        getP2Type,
+        getP1Sym,
         startGame,
     }
 })();
@@ -274,10 +321,18 @@ function selfTest() {
     //play2.makeMove(1,2); // overwrite last move?
 }
 
-selfTest();
+//selfTest();
 
 //============================== INITIALIZATION CODE ===============================
 
 
+gameBoard.buildTable();
+gameBoard.sideBarSetup();
+
+let player1Sym = gameBoard.getP1Sym();
+let player2Type = gameBoard.getP2Type();
+
+let player1 = Player('Player 1', 'X', 'human');
+//add event listener to 'human' and 'ai' buttons
 //startGame();
 
