@@ -82,7 +82,7 @@ footer {
 
 .playerText {
     text-align: left;
-    margin: 15px;
+    margin: 1%;
 }
 
 .choiceBtnContainer {
@@ -94,7 +94,7 @@ footer {
 }
 
 .choiceBtn {
-    margin: 5px;
+    margin: 1%;
 }
 
 #gameTable {
@@ -102,8 +102,8 @@ footer {
     flex-direction: column;
     border: 1 solid black;
     margin-left: auto;
-    margin-right: 35%;
-    margin-top: 20%;
+    margin-right: 40%;
+    margin-bottom: 90%;
 }
 
 .rowDiv {
@@ -151,7 +151,7 @@ footer {
 }
 
 .playerScoreText {
-    margin: 5px;
+    margin: 1%;
 }
 
 #githubIcon {
