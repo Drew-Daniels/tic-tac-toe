@@ -220,28 +220,29 @@ const gameBoard = (() => {
         symbol = sym;
         let winnerSym;
         let res;
+        let winCheck, tieCheck;
         _checkForTurnsSet(symbol);
         if (_isEmptyTile(ri, ci) && _isInRange(ri, ci) && _isTurn(sym)) {
             _updateArr(ri, ci);
             _drawMove(ri, ci);
             _switchTurns();
-            res = _isAWin();
-            if(res[0]) {
-                winnerSym = res[1];
+            winCheck = _isAWin();
+            tieCheck = _isATie();
+            if (winCheck[0]) {
+                res = winCheck;
+                winnerSym = res[2];
                 p1Sym = p1.getSymbol();
                 p2Sym = p2.getSymbol();
                 if (p1Sym === winnerSym) {
-                    console.log(p1.getName() + ' is the winner ');
                     p1.incrScore();
-                    console.log(p1.getName() + "'s score is now" + p1.getScore());
                 } else if (p2Sym === winnerSym) {
-                    console.log(p2.getName() + ' is the winner ');
                     p2.incrScore();
-                    console.log(p2.getName() + "'s score is now" + p2.getScore());
                 }
                 _updateScoreBoard();
                 _clearBoard();
-                console.log(gameArray);
+            } else if (tieCheck[0]) {
+                console.log("It's a tie!");
+                _clearBoard();
             }
         }
     }
@@ -254,7 +255,14 @@ const gameBoard = (() => {
         // message saying who won
     }
     function _isATie() {
-        //check if all tiles are not empty strings
+        for (let ri = 0; ri < 3; ri++) {
+            for (let ci = 0; ci < 3; ci++) {
+                if (gameArray[ri][ci][0] === '') {
+                    return false;
+                }
+            }
+        }
+        return [true, 'tie'];
     }
 
     function _isAWin() {
@@ -316,7 +324,7 @@ const gameBoard = (() => {
             else return false;
         }
         let res = (checkRows() || checkCols() || checkDiags()) ? true: false;
-        return [res, winSym];
+        return [res, 'win', winSym];
     }
 
     function _updateScoreBoard() {
@@ -328,8 +336,6 @@ const gameBoard = (() => {
 
     function _clearBoard() {
         gameArray = JSON.parse(JSON.stringify(BLANK_BOARD));
-        console.log(BLANK_BOARD);
-        console.log(gameArray);
         for (let ri=0; ri < 3; ri++) {
             for (let ci=0; ci < 3; ci++) {
                 _clearTile(ri, ci);
