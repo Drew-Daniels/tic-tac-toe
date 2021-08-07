@@ -12,12 +12,18 @@ const Player = (name, symbol, type) => {
         } else symbol = 'X';
         return symbol;
     }
+    const switchType = () => {
+        if (type === 'human') {
+            type = 'ai';
+        } else type = 'human';
+        return type;
+    }
     const oppositeSymbol = () => {
         if (symbol === 'X') {
             oppSymbol = 'O';
         } else oppSymbol = 'X';
         return oppSymbol;
-    }
+    };
     const getType = () => type;
     const getScore = () => score;
     const incrScore = () => score++;
@@ -25,15 +31,34 @@ const Player = (name, symbol, type) => {
         gameBoard.playerMove(symbol, ri, ci);
     }
     const getInfo = () => [name, symbol, type, score];
-    return {getName, getSymbol, switchSymbol, oppositeSymbol, getType, getScore, incrScore, makeMove, getInfo};
+    const calcMoveRandom = () => {
+        let posMoves = [];
+        let currArr = gameBoard.getCurrArray();
+        for (let ri = 0; ri < 3; ri++) {
+            for (let ci = 0; ci < 3; ci++) {
+                let posCoord = currArr[ri][ci][0];
+                if (posCoord === '') {
+                    posMoves.push('r'+ String(ri) + 'c' + String(ci));
+                }
+            }
+        }
+        // select random from possible
+        let randMove = posMoves[Math.floor(Math.random()*posMoves.length)];
+        return randMove;
+    };
+    return {getName, getSymbol, switchSymbol, switchType, oppositeSymbol, getType, getScore, incrScore, makeMove, calcMoveRandom, getInfo};
 }
 
 const gameBoard = (() => {
     let p1, p2;
-    let p2TypeChoice ='human';
-    let p1SymChoice = 'X';
+    let gameNumber = 0;
+    const p2TypeChoice = () => p2.getType();
+    const p1SymChoice = () => p1.getSymbol();
     const RED_RGB = 'rgb(0, 255, 0)';
     const GRAY_RGB = 'rgb(240, 240, 240)';
+    const delayMS = 500;
+    const displayMsgBox = document.querySelector('#displayMsgBox');
+
     function sideBarSetup() {
         function activateColor(ele1, ele2, colOn=RED_RGB, colOff=GRAY_RGB) {
             ele1.style.backgroundColor = colOn;
@@ -52,34 +77,31 @@ const gameBoard = (() => {
         // LISTENERS
         // Set up player 2 type (Human or AI)
         player2TypeHuman.addEventListener('click', function() {
-            p2TypeChoice = 'human';
+            p2.switchType();
             activateColor(player2TypeHuman, player2TypeAI)
         })
         player2TypeAI.addEventListener('click', function() {
-            p2TypeChoice = 'ai';
+            p2.switchType();
             activateColor(player2TypeAI, player2TypeHuman)
         })
         // Set up player 1 symbol ('X' or 'O')
         player1SymX.addEventListener('click', function() {
-            p1SymChoice = 'X';
+            p1.switchSymbol();
+            p2.switchSymbol();
             activateColor(player1SymX, player1SymO);
         })
         player1SymO.addEventListener('click', function() {
-            p1SymChoice = 'O';
+            p1.switchSymbol();
+            p2.switchSymbol();
             activateColor(player1SymO, player1SymX);
         })
-        restartBtn.addEventListener('click', function() {
-            history.go(0);
-        })
+        restartBtn.addEventListener('click', restartMatch)
     }
 
-    function getP1Sym() {
-        return p1SymChoice;
+    function restartMatch() {
+        history.go(0);
     }
 
-    function getP2Type() {
-        return p2TypeChoice;
-    }
     const BLANK_BOARD = [
         [
             [''], [''], ['']
@@ -195,11 +217,24 @@ const gameBoard = (() => {
         }
     }
 
+    function _aiMakeMove(symToCheck) {
+        if (p2.getSymbol() === symToCheck && p2.getType() === 'ai') {
+            setTimeout(function() {
+                let move = p2.calcMoveRandom();
+                let moveRow = parseInt(move.slice(1,2));
+                let moveCol = parseInt(move.slice(3,4));
+                p2.makeMove(moveRow, moveCol);
+            }, delayMS)
+        }
+    }
+
     function _switchTurns() {
         if (whoseTurn === 'X') {
             whoseTurn = 'O'
+            _aiMakeMove('O');
         } else {
             whoseTurn = 'X'
+            _aiMakeMove('O');
         }
     }
 
@@ -225,25 +260,36 @@ const gameBoard = (() => {
         if (_isEmptyTile(ri, ci) && _isInRange(ri, ci) && _isTurn(sym)) {
             _updateArr(ri, ci);
             _drawMove(ri, ci);
-            _switchTurns();
-            winCheck = _isAWin();
-            tieCheck = _isATie();
-            if (winCheck[0]) {
-                res = winCheck;
-                winnerSym = res[2];
-                p1Sym = p1.getSymbol();
-                p2Sym = p2.getSymbol();
-                if (p1Sym === winnerSym) {
-                    p1.incrScore();
-                } else if (p2Sym === winnerSym) {
-                    p2.incrScore();
+            //add wait
+            setTimeout(function() {
+                _switchTurns();
+                winCheck = _isAWin();
+                tieCheck = _isATie();
+                if (winCheck[0]) {
+                    setTimeout(function () {
+                        res = winCheck;
+                        winnerSym = res[2];
+                        p1Sym = p1.getSymbol();
+                        p2Sym = p2.getSymbol();
+                        if (p1Sym === winnerSym) {
+                            p1.incrScore();
+                            _updateDisplayMsg(_winMsg(p1.getName(), 
+                                              String(++gameNumber)));
+                        } else if (p2Sym === winnerSym) {
+                            p2.incrScore();
+                            _updateDisplayMsg(_winMsg(p2.getName(), 
+                                              String(++gameNumber)));
+                        }
+                        _updateScoreBoard();
+                        _clearBoard();
+                    }, delayMS);
+                } else if (tieCheck[0]) {
+                    setTimeout(function() {
+                        _updateDisplayMsg(_tieMsg(String(++gameNumber)));
+                        _clearBoard();
+                    }, delayMS)
                 }
-                _updateScoreBoard();
-                _clearBoard();
-            } else if (tieCheck[0]) {
-                console.log("It's a tie!");
-                _clearBoard();
-            }
+            }, delayMS);
         }
     }
 
@@ -251,9 +297,13 @@ const gameBoard = (() => {
         gameArray[ri][ci][0] = symbol;
     }
 
-    function _gameOverPopup() {
-        // message saying who won
+    function _updateDisplayMsg(msg) {
+        displayMsgBox.innerText = msg;
     }
+
+    const _tieMsg = (gameNum) => `${gameNum} is a tie!`;
+    const _winMsg = (winner, gameNum) => `${winner} won game number ${gameNum}`;
+    
     function _isATie() {
         for (let ri = 0; ri < 3; ri++) {
             for (let ci = 0; ci < 3; ci++) {
@@ -351,6 +401,10 @@ const gameBoard = (() => {
         thisTile(ri, ci).innerText = '';
     }
 
+    function getCurrArray() {
+        return gameArray;
+    }
+
     const playerMove = (playerSymbol, ri, ci) => _updateBoard(playerSymbol, ri, ci);
     const getTurn = () => whoseTurn;
     return {
@@ -358,9 +412,8 @@ const gameBoard = (() => {
         getTurn,
         sideBarSetup,
         buildTable,
-        getP2Type,
-        getP1Sym,
         startGame,
+        getCurrArray,
     }
 })();
 
@@ -390,11 +443,8 @@ function selfTest() {
 gameBoard.buildTable();
 gameBoard.sideBarSetup();
 
-let player1Sym = gameBoard.getP1Sym();
-let player2Type = gameBoard.getP2Type();
-
-let player1 = Player('Player 1', player1Sym, 'human');
-let player2 = Player('Player 2', player1.oppositeSymbol(), player2Type);
+let player1 = Player('Player 1', 'X', 'human');
+let player2 = Player('Player 2', 'O', 'human');
 
 gameBoard.startGame(player1, player2);
 
