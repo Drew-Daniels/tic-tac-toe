@@ -3,30 +3,54 @@
 //========================== FACTORY FUNCTIONS & MODULES ===========================
 const Player = (name, symbol, type) => {
 
+    let score = 0;
     const getName = () => name;
     const getSymbol = () => symbol;
+    const switchSymbol = () => {
+        if (symbol === 'X') {
+            symbol = 'O';
+        } else symbol = 'X';
+        return symbol;
+    }
+    const oppositeSymbol = () => {
+        if (symbol === 'X') {
+            oppSymbol = 'O';
+        } else oppSymbol = 'X';
+        return oppSymbol;
+    }
     const getType = () => type;
+    const getScore = () => score;
+    const incrScore = () => score++;
     const makeMove = (ri, ci) => {
         gameBoard.playerMove(symbol, ri, ci);
     }
-    return {getName, getSymbol, getType, makeMove};
+    const getInfo = () => [name, symbol, type, score];
+    return {getName, getSymbol, switchSymbol, oppositeSymbol, getType, getScore, incrScore, makeMove, getInfo};
 }
 
 const gameBoard = (() => {
     let p1, p2;
-    let p2TypeChoice, p1SymChoice;
+    let p2TypeChoice ='human';
+    let p1SymChoice = 'X';
     const RED_RGB = 'rgb(0, 255, 0)';
     const GRAY_RGB = 'rgb(240, 240, 240)';
     function sideBarSetup() {
-        // Set up player 2 type (Human or AI)
-
         function activateColor(ele1, ele2, colOn=RED_RGB, colOff=GRAY_RGB) {
             ele1.style.backgroundColor = colOn;
             ele2.style.backgroundColor = colOff;
         }
-
+        // REFERENCES
         let player2TypeHuman = document.querySelector("#player2Human");
         let player2TypeAI = document.querySelector("#player2AI")
+        let player1SymX = document.querySelector('#player1X');
+        let player1SymO = document.querySelector('#player1O');
+        let restartBtn = document.querySelector('#restartBtn');
+        // DEFAULTS
+        activateColor(player2TypeHuman, player2TypeAI);
+        activateColor(player1SymX, player1SymO);
+
+        // LISTENERS
+        // Set up player 2 type (Human or AI)
         player2TypeHuman.addEventListener('click', function() {
             p2TypeChoice = 'human';
             activateColor(player2TypeHuman, player2TypeAI)
@@ -36,8 +60,6 @@ const gameBoard = (() => {
             activateColor(player2TypeAI, player2TypeHuman)
         })
         // Set up player 1 symbol ('X' or 'O')
-        let player1SymX = document.querySelector('#player1X');
-        let player1SymO = document.querySelector('#player1O');
         player1SymX.addEventListener('click', function() {
             p1SymChoice = 'X';
             activateColor(player1SymX, player1SymO);
@@ -45,6 +67,9 @@ const gameBoard = (() => {
         player1SymO.addEventListener('click', function() {
             p1SymChoice = 'O';
             activateColor(player1SymO, player1SymX);
+        })
+        restartBtn.addEventListener('click', function() {
+            history.go(0);
         })
     }
 
@@ -55,8 +80,7 @@ const gameBoard = (() => {
     function getP2Type() {
         return p2TypeChoice;
     }
-
-    let gameArray = [
+    const BLANK_BOARD = [
         [
             [''], [''], ['']
         ],
@@ -67,6 +91,8 @@ const gameBoard = (() => {
             [''], [''], [''] 
         ] 
     ];
+    // cannot use ...spread operator here otherwise would only be shallow cp
+    let gameArray = JSON.parse(JSON.stringify(BLANK_BOARD));
     
     function buildTable() {
         let arr = gameArray;
@@ -147,7 +173,7 @@ const gameBoard = (() => {
     }
 
     let symbol;
-    let whoseTurn;
+    let whoseTurn = 'X';
 
     const thisTile = function (ri, ci) {
         let tile = document.getElementById('r' + ri + 'c' + ci);
@@ -206,9 +232,16 @@ const gameBoard = (() => {
                 p2Sym = p2.getSymbol();
                 if (p1Sym === winnerSym) {
                     console.log(p1.getName() + ' is the winner ');
+                    p1.incrScore();
+                    console.log(p1.getName() + "'s score is now" + p1.getScore());
                 } else if (p2Sym === winnerSym) {
                     console.log(p2.getName() + ' is the winner ');
+                    p2.incrScore();
+                    console.log(p2.getName() + "'s score is now" + p2.getScore());
                 }
+                _updateScoreBoard();
+                _clearBoard();
+                console.log(gameArray);
             }
         }
     }
@@ -227,7 +260,7 @@ const gameBoard = (() => {
     function _isAWin() {
         let winSym;
         function checkRows() {
-            for (let ri = 0; ri < gameArray.length; ri++) {
+            for (let ri = 0; ri < 3; ri++) {
                 if (
                     (gameArray[ri][0][0] === 
                     gameArray[ri][1][0]) &&
@@ -238,11 +271,12 @@ const gameBoard = (() => {
                     ) {
                         winSym = gameArray[ri][0][0];
                         return [true, winSym]
-                } else return false;
+                }
             }
+            return false;
         }
         function checkCols() {
-            for (let ci = 0; ci < gameArray.length; ci++) {
+            for (let ci = 0; ci < 3; ci++) {
                 if (
                     (gameArray[0][ci][0] === 
                     gameArray[1][ci][0]) &&
@@ -253,8 +287,9 @@ const gameBoard = (() => {
                     ) {
                         winSym = gameArray[0][ci][0];
                         return [true, winSym]
-                } else return false;
+                }
             }
+            return false;
         }
         function checkDiags() {
             if (
@@ -267,7 +302,6 @@ const gameBoard = (() => {
                 winSym = gameArray[0][0][0];
                 return [true, winSym];
             }
-            // Test 2 - Top Right to Bottom Left
             else if (
                 (gameArray[0][2][0] ===
                  gameArray[1][1][0]) &&
@@ -285,8 +319,30 @@ const gameBoard = (() => {
         return [res, winSym];
     }
 
+    function _updateScoreBoard() {
+        const p1ScoreNum = document.querySelector('#player1ScoreNum');
+        const p2ScoreNum = document.querySelector('#player2ScoreNum');
+        p1ScoreNum.innerText = p1.getScore();
+        p2ScoreNum.innerText = p2.getScore();
+    }
+
+    function _clearBoard() {
+        gameArray = JSON.parse(JSON.stringify(BLANK_BOARD));
+        console.log(BLANK_BOARD);
+        console.log(gameArray);
+        for (let ri=0; ri < 3; ri++) {
+            for (let ci=0; ci < 3; ci++) {
+                _clearTile(ri, ci);
+            }
+        }
+    }
+
     function _drawMove(ri, ci) {
         thisTile(ri, ci).innerText = symbol;
+    }
+
+    function _clearTile(ri, ci) {
+        thisTile(ri, ci).innerText = '';
     }
 
     const playerMove = (playerSymbol, ri, ci) => _updateBoard(playerSymbol, ri, ci);
@@ -325,14 +381,14 @@ function selfTest() {
 
 //============================== INITIALIZATION CODE ===============================
 
-
 gameBoard.buildTable();
 gameBoard.sideBarSetup();
 
 let player1Sym = gameBoard.getP1Sym();
 let player2Type = gameBoard.getP2Type();
 
-let player1 = Player('Player 1', 'X', 'human');
-//add event listener to 'human' and 'ai' buttons
-//startGame();
+let player1 = Player('Player 1', player1Sym, 'human');
+let player2 = Player('Player 2', player1.oppositeSymbol(), player2Type);
+
+gameBoard.startGame(player1, player2);
 
