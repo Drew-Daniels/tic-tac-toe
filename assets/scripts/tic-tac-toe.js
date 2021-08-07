@@ -71,7 +71,7 @@ const gameBoard = (() => {
         let player1SymO = document.querySelector('#player1O');
         let restartBtn = document.querySelector('#restartBtn');
         // DEFAULTS
-        activateColor(player2TypeHuman, player2TypeAI);
+        activateColor(player2TypeAI, player2TypeHuman);
         activateColor(player1SymX, player1SymO);
 
         // LISTENERS
@@ -444,7 +444,7 @@ gameBoard.buildTable();
 gameBoard.sideBarSetup();
 
 let player1 = Player('Player 1', 'X', 'human');
-let player2 = Player('Player 2', 'O', 'human');
+let player2 = Player('Player 2', 'O', 'ai');
 
 gameBoard.startGame(player1, player2);
 
