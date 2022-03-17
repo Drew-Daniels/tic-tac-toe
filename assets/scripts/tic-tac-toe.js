@@ -283,7 +283,7 @@ const gameBoard = (() => {
         displayMsgBox.innerText = msg;
     }
 
-    const _tieMsg = (gameNum) => `${gameNum} is a tie!`;
+    const _tieMsg = (gameNum) => `Game number ${gameNum} is a tie!`;
     const _winMsg = (winner, gameNum) => `${winner} won game number ${gameNum}`;
     
     function _isATie() {
