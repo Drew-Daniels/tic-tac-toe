@@ -51,58 +51,108 @@ table {
 * {
     font-family: 'Rajdhani', sans-serif;
 }
-header {
-    text-align: left;
-    margin: 15px;
-    font-size: x-large;
+* > {
+    box-sizing: border-box;
 }
-
-footer {
+.header {
     text-align: center;
-    position: absolute;
-    bottom: 0;
-    width: 110%;
+    margin: 15px;
+    font-size: 3em;
+    font-weight: 900;
 }
 
+.footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    height: 3em;
+    padding: 2em 0;
+}
+.content-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    font-weight: 600;
+}
+.content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
 .uiContainer {
     display: flex;
-    flex-direction: row;
-    height: 90vh;
+    flex-direction: column;
+    align-items: center;
 }
-
+.uiContainerItem {
+    margin-bottom: 1em;
+}
 .sideBar {
     display: flex;
-    width: 150px;
-    height: 80%;
-    flex-direction: column;
-    background-color: azure;
-    border: 1px solid gray;
-    border-radius: 0px 5px 5px 0px;
 }
-
+.sideBarChoices {
+    display: flex;
+    flex-direction: column;
+}
+.scoreboard-header {
+    text-align: center;
+    font-size: 2em;
+}
+.scores {
+    display: flex;
+    justify-content: center;
+    font-size: 2em;
+    margin: .5em 0;
+}
+.player-scores {
+    border-radius: .5em;
+    padding: .5em;
+    margin: 0 .5em;
+}
+.player-1-scores {
+    background-color: rgb(217, 217, 250);
+}
+.player-2-scores {
+    background-color: rgb(250, 217, 217);
+}
 .playerText {
-    text-align: left;
+    text-align: center;
     margin: 1%;
 }
-
+.playerScoreNum {
+    margin: 0 .25em;
+    font-size: 2em;
+    text-align: center;
+}
+.choiceBtn {
+    font-size: 1.5em;
+    margin-right: .25em;
+}
 .choiceBtnContainer {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: darkcyan;
-
+    margin-top: .5em;
 }
-
-.choiceBtn {
-    margin: 1%;
+.btn-base {
+    border: 0;
+    font-weight: 900;
+    border: .01em solid rgb(217, 217, 250);
 }
-
+.game-options-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 2em;
+}
 #gameTable {
     display: flex;
     flex-direction: column;
     border: 1 solid black;
     margin-left: auto;
     margin-right: auto;
+    margin-top: 1em;
 }
 
 .rowDiv {
@@ -113,10 +163,10 @@ footer {
 }
 
 .tile {
-    width: 100px;
-    height: 100px;
-    padding: 10px;
-    font-size: 100px;
+    width: 1em;
+    height: 1em;
+    padding: .1em;
+    font-size: 6em;
     text-align: center;
     border-radius: 4%;
     background-color: azure;
@@ -144,20 +194,23 @@ footer {
     width: 100%;
 }
 
-#restartBtn {
-    margin: 5px;
-    margin-top: auto;
-}
-
-.playerScoreText {
-    margin: 1%;
-}
-
 #githubIcon {
-    width: 20px;
-    height: auto;
+    height: 2em;
+    transition: transform .5s ease-in-out;
+}
+#githubIcon:hover {
+    height: 2.5em;
+    transform: rotate(360deg);
+}
+#githubProfileLink {
+    margin: .5em 0;
+}
+#restartBtn {
+    font-size: 2em;
+    font-weight: 900;
 }
 
-#githubProfileLink {
-    margin: 15px;
-}
+@keyframes spin {
+    0%  {-webkit-transform: rotate(0deg);}
+    100% {-webkit-transform: rotate(360deg);}   
+  }

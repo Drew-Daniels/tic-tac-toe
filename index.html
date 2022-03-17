@@ -3,44 +3,65 @@
 <head>
     <meta charset="utf-8">
     <title>Tic-Tac-Toe</title>
-    <link rel="icon" type="image/png" href="assets/pictures/tic-tac-toe.png">
+    <link rel="icon" type="image/png" href="assets/pictures/tic-tac-toe-icon.svg">
     <link rel="stylesheet" href="assets/stylesheets/style.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        Tic-Tac-Toe
-    </header>
-    <script src="assets/scripts/tic-tac-toe.js" defer></script>
-    <div class="uiContainer">
-        <div class="sideBar">
-            <div class="playerText">Player 1</div>
-            <div class="playerText">vs.</div>
-            <div class="playerText">Player 2 as...</div>
-                <div id="player2TypeContainer" class="choiceBtnContainer">
-                    <button id="player2Human" class="choiceBtn">Human</button>
-                    <button id="player2AI" class="choiceBtn">AI</button>
-                </div>
-                <div id="scoreboard">Scoreboard:
-                    <div id="player1ScoreText" class="playerScoreText">Player 1:
-                        <div id="player1ScoreNum" class="playerScoreNum">0</div>
+    <div class="content-container">
+        <div class="content">
+            <header class="header">
+                Tic-Tac-Toe
+            </header>
+            <script src="assets/scripts/tic-tac-toe.js" defer></script>
+            <div class="uiContainer">
+
+                <div id="scoreboard" class="uiContainerItem">
+                    <h1 class="scoreboard-header">Score:</h1>
+                    <div class="scores">
+                        <div class="player-1-scores player-scores">
+                            <h2 id="player1ScoreText" class="playerScoreText">Player 1</h2>
+                            <h2 id="player1ScoreNum" class="playerScoreNum">0</h2>
+                        </div>
+                        <div class="player-2-scores player-scores">
+                            <h2 id="player2Score" class="playerScoreText">Player 2</h2>
+                            <h2 id="player2ScoreNum" class="playerScoreNum">0</h2>
+                        </div>
                     </div>
-                    <div id="player2Score" class="playerScoreText">Player 2:
-                        <div id="player2ScoreNum" class="playerScoreNum">0</div>
+                </div>
+                <div class="sideBar uiContainerItem">
+                    <div class="sideBarChoices">
+                        <div class="sideBarHeader">
+                            <div class="playerText-container">
+                                <h2 class="playerText">Player 2 as...</h2>
+                            </div>
+                        </div>
+                        <div id="player2TypeContainer" class="choiceBtnContainer">
+                            <button id="player2Human" class="btn-base choiceBtn">Human</button>
+                            <button id="player2AI" class="btn-base choiceBtn">AI</button>
+                        </div>
                     </div>
                 </div>
                 <div id="displayMsgBox"></div>
-            <button id="restartBtn">Restart</button>
+                <div id="gameTable"></div>
+                <div class="game-options-container">
+                    <button id="restartBtn" class="btn-base">Restart</button>
+                </div>
+            </div>
         </div>
-        <div id="gameTable"></div>
+        <footer class="footer">
+            <div>
+                <a href="https://github.com/Drew-Daniels/tic-tac-toe">
+                    <img id="githubIcon" src="assets/pictures/github-icon.svg">
+                </a>
+            </div>
+            <div id="githubProfileLink">
+                <span>Created by</span>
+                <a href="https://github.com/Drew-Daniels">Drew Daniels</a>
+            </div>
+        </footer>
     </div>
-    <footer>View source code on 
-        <a href="https://github.com/Drew-Daniels/tic-tac-toe"><img id="githubIcon" src="assets/pictures/github-icon.png"></a>
-        <div id="githubProfileLink">
-            Created by <a href="https://github.com/Drew-Daniels">Drew Daniels</a>
-        </div>
-    </footer>
 </body>
 </html>
